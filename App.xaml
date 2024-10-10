@@ -1,0 +1,9 @@
+﻿<Application x:Class="ShippingVisualization.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ShippingVisualization"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <FontFamily x:Key="Dingding">./Assets/Fonts/#钉钉进步体 Regular</FontFamily>
+    </Application.Resources>
+</Application>

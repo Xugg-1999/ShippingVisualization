@@ -1,0 +1,186 @@
+﻿<Window x:Class="ShippingVisualization.MainWindow"
+        FontFamily="Microsoft YaHei" FontWeight="ExtraLight"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen" 
+        Title="成品发货可视化平台" WindowStyle="None"  AllowsTransparency="True" ResizeMode="NoResize" Height="700" Width="1300" Loaded="Window_Loaded">
+    <!--<WindowChrome.WindowChrome>
+        <WindowChrome NonClientFrameEdges="None" GlassFrameThickness="15"
+                  UseAeroCaptionButtons="False" CaptionHeight="60"/>
+    </WindowChrome.WindowChrome>-->
+    <Window.Background>
+        <RadialGradientBrush Center="1,0.1" GradientOrigin="1,0.1" RadiusX="0.9" RadiusY="0.9">
+            <GradientStop Color="#FF0F4D86" Offset="-1.5"/>
+            <GradientStop Color="#010C1D" Offset="2"/>
+        </RadialGradientBrush>
+    </Window.Background>
+    <Window.Resources>
+        <ResourceDictionary Source="../Assets/Styles/AppStyles.xaml"/>
+    </Window.Resources>
+    <Grid ClipToBounds="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="27"/>
+            <RowDefinition Height="auto" MinHeight="236"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Image x:Name="CloseImageButton" Source="/Icon/Close.ico" Width="18" Height="18" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" 
+               MouseDown="CloseImageButton_MouseDown" Margin="10,10,0,0"
+               Cursor="Hand"/>
+        <!--<Button x:Name="CloseButton" Content="关闭" Width="60" Height="30" 
+                HorizontalAlignment="Left" VerticalAlignment="Top" 
+                Click="CloseButton_Click" Margin="10,10,0,0"/>-->
+        <!--第yi行-->
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Height="30" Width="382">
+            <Grid.RenderTransform>
+                <SkewTransform AngleX="-30"/>
+            </Grid.RenderTransform>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="115*"/>
+                <ColumnDefinition Width="210*"/>
+                <ColumnDefinition Width="19*"/>
+                <ColumnDefinition Width="19*"/>
+                <ColumnDefinition Width="19*"/>
+            </Grid.ColumnDefinitions>
+            <Border Height="30" Width="345" Grid.ColumnSpan="4" Margin="0,0,18,0">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#FF1F3A69" Offset="0"/>
+                        <GradientStop Color="#0C192A" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+            </Border>
+            <Border Width="13" Background="#101E34" Grid.Column="2" Margin="3,2,3,2"/>
+            <Border Width="13" Background="#101E34" Grid.Column="3" Margin="3,2,3,2"/>
+            <Border Width="13" Background="#101E34" Grid.Column="4" Margin="3,2,3,2"/>
+        </Grid>
+
+        <TextBlock Text="成品发货可视化平台" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" Foreground="#1FDCF5"
+           FontWeight="Normal" FontFamily="{StaticResource Dingding}" Height="20" Width="174"/>
+        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,0,-5">
+            <TextBlock Text="刷新频率(s):" VerticalAlignment="Center" FontSize="12" 
+                       FontFamily="{StaticResource Dingding}" Foreground="#661FDCF5"  Margin="0,0,5,-5"/>
+            <ComboBox Height="20" Width="70" SelectedItem="{Binding SelectedRefreshFrequency, Mode=TwoWay}"  SelectionChanged="ComboBox_SelectionChanged">
+                <ComboBoxItem Content="3" />
+                <ComboBoxItem Content="5" />
+                <ComboBoxItem Content="10" />
+                <ComboBoxItem Content="30" />
+                <ComboBoxItem Content="60" />
+                <ComboBoxItem Content="120" />
+            </ComboBox>
+            <TextBlock Text=" " VerticalAlignment="Center" FontSize="12" FontFamily="{StaticResource Dingding}" Foreground="#661FDCF5" Margin="0,0,5,0"/>
+            <TextBlock Text="日期:" VerticalAlignment="Center" FontSize="12" 
+                           FontFamily="{StaticResource Dingding}" Foreground="#661FDCF5" Margin="0,0,5,0"/>
+            <DatePicker Height="24" Width="120" 
+                            SelectedDate="{Binding SelectedDate, Mode=TwoWay}" 
+                            FontFamily="{StaticResource Dingding}" VerticalAlignment="Center" 
+                            Foreground="#D14646"/>
+        </StackPanel>
+        <!--第二行-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="当日发货计划" Style="{StaticResource GroupBoxStyle}">
+                <GroupBox.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ContentPresenter Content="{Binding}" VerticalAlignment="Center"/>
+                            <Image Source="/Icon/DropShipping.ico" Width="20" Height="20" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </GroupBox.HeaderTemplate>
+                <DataGrid x:Name="ShippingDataGrid" AutoGenerateColumns="False" CanUserAddRows="False"  ItemsSource="{Binding ShippingRecords}" ColumnWidth="*" RowHeight="20" FontSize="10" FontWeight="Bold"    SelectionChanged="ShippingDataGrid_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="No." Binding="{Binding FNO}" Width="0.4*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="发货通知单号" Binding="{Binding FBILLNO}" Width="1.2*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="业务员" Binding="{Binding FSALER}" Width="0.6*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="提单号" Binding="{Binding FBLNO}" Width="1.8*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="箱型" Binding="{Binding FBOXTYPE}" Width="0.8*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="装车时间" Binding="{Binding FLOADINGTIME ,StringFormat='yy-MM-dd HH:mm:ss'}" Width="1.5*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="开始扫描时间" Binding="{Binding FSTARTTIME ,StringFormat='yy-MM-dd HH:mm:ss'}" Width="1.5*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="最后扫描时间" Binding="{Binding FENDTIME ,StringFormat='yy-MM-dd HH:mm:ss'}" Width="1.5*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="用时" Binding="{Binding FTOTALDURATION}" Width="0.6*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="状态" Binding="{Binding FSTATUS}" Width="0.6*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+            <GroupBox Header="次日发货计划" Grid.Column="1" Style="{StaticResource GroupBoxStyle}">
+                <GroupBox.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ContentPresenter Content="{Binding}" VerticalAlignment="Center"/>
+                            <Image Source="/Icon/DropShippingNext.ico" Width="20" Height="20" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </GroupBox.HeaderTemplate>
+                <DataGrid x:Name="ShippingDataGridNextDay" AutoGenerateColumns="False" CanUserAddRows="False"  RowHeight="20" FontSize="10" FontWeight="Bold"  ItemsSource="{Binding ShippingRecordsNextDay}" ColumnWidth="*">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="No." Binding="{Binding FNO}" Width="0.3*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="发货通知单号" Binding="{Binding FBILLNO}" Width="1*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="提单号" Binding="{Binding FBLNO}" Width="1.5*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="箱型" Binding="{Binding FBOXTYPE}" Width="0.8*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="预计装车时间" Binding="{Binding FLOADINGTIME ,StringFormat='yy-MM-dd HH:mm:ss'}" Width="1.3*" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+        </Grid>
+        <!--第三行-->
+        <Grid Grid.Row="1" HorizontalAlignment="Center" Width="1300">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="已装柜" Style="{StaticResource GroupBoxStyle}">
+                <GroupBox.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ContentPresenter Content="{Binding}" VerticalAlignment="Center"/>
+                            <Image Source="/Icon/List.ico" Width="20" Height="20" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </GroupBox.HeaderTemplate>
+                <DataGrid x:Name="CompletedLoading" AutoGenerateColumns="False" CanUserAddRows="False" RowHeight="20" FontSize="10" FontWeight="Bold"   ItemsSource="{Binding CompletedLoading}" ColumnWidth="*">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="销售订单" Binding="{Binding FBILLNO}" Width="0.85*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="规格型号" Binding="{Binding FSPEC}" Width="3.1*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="物料名称" Binding="{Binding FMATERIALNAME}" Width="0.9*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="物料编码" Binding="{Binding FMATERIALID}" Width="1.3*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="数量" Binding="{Binding FQTY}" Width="0.4*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="单位" Binding="{Binding FUNIT}" Width="0.4*" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+            <GroupBox Header="待装柜" Grid.Column="1" Style="{StaticResource GroupBoxStyle}">
+                <GroupBox.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ContentPresenter Content="{Binding}" VerticalAlignment="Center"/>
+                            <Image Source="/Icon/UnList.ico" Width="20" Height="20" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </GroupBox.HeaderTemplate>
+                <DataGrid x:Name="UnCompletedLoading" AutoGenerateColumns="False" CanUserAddRows="False" RowHeight="20" FontSize="10" FontWeight="Bold"  ItemsSource="{Binding UnCompletedLoading}" ColumnWidth="*">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="销售订单" Binding="{Binding FBILLNO}" Width="0.85*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="规格型号" Binding="{Binding FSPEC}" Width="2.8*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="物料名称" Binding="{Binding FMATERIALNAME}" Width="1.1*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="物料编码" Binding="{Binding FMATERIALID}" Width="1.4*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="数量" Binding="{Binding FQTY}" Width="0.4*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="单位" Binding="{Binding FUNIT}" Width="0.4*" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</Window>
